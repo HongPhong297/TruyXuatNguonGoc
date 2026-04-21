@@ -1,11 +1,13 @@
 import { vi } from '@/lib/i18n/vi'
 import { Factory } from 'lucide-react'
 import { getPendingBatches } from '@/app/actions/process'
+import { requireRole } from '@/lib/auth-helpers'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Cơ sở chế biến' }
 
 export default async function FacilityPage() {
+  await requireRole('facility')
   const pendingRows = await getPendingBatches()
   const pendingBatches = pendingRows.map(r => r.product)
 

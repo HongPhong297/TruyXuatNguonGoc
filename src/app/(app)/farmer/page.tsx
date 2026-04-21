@@ -1,6 +1,7 @@
 import { vi } from '@/lib/i18n/vi'
 import { Sprout, Plus } from 'lucide-react'
 import HarvestForm from '@/components/forms/harvest-form'
+import { requireRole } from '@/lib/auth-helpers'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Nông dân' }
@@ -13,7 +14,8 @@ const DEMO_FARMS = [
   { id: 'farm-veg-001', name: 'Vườn rau hữu cơ Bình Đà Lạt', commodityId: 'vegetable', province: 'Lâm Đồng' },
 ]
 
-export default function FarmerPage() {
+export default async function FarmerPage() {
+  await requireRole('farmer')
   return (
     <div>
       <div className="flex items-center justify-between mb-6">

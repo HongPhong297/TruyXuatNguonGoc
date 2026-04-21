@@ -26,18 +26,25 @@ function LoginForm() {
   const [name, setName] = useState('')
   const [role, setRole] = useState('farmer')
 
+  const ROLE_HOME: Record<string, string> = {
+    farmer: '/farmer', facility: '/facility', distributor: '/distributor', admin: '/dashboard'
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault(); setError(''); setLoading(true)
     try {
       if (mode === 'login') {
         const r = await signIn.email({ email, password })
         if (r.error) throw new Error(r.error.message)
+        const userRole = (r.data?.user as Record<string, unknown>)?.role as string ?? 'farmer'
+        router.push(searchParams.get('redirect') ?? ROLE_HOME[userRole] ?? '/farmer')
       } else {
         // @ts-expect-error custom field role
         const r = await signUp.email({ email, password, name, role })
         if (r.error) throw new Error(r.error.message)
+        router.push(ROLE_HOME[role] ?? '/farmer')
       }
-      router.push(redirect); router.refresh()
+      router.refresh()
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Đăng nhập thất bại')
     } finally { setLoading(false) }

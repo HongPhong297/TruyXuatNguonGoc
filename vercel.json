@@ -1,0 +1,18 @@
+{
+  "buildCommand": "pnpm build",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "regions": ["sin1"],
+  "env": {
+    "NEO4J_URI": "@neo4j_uri",
+    "NEO4J_USERNAME": "@neo4j_username",
+    "NEO4J_PASSWORD": "@neo4j_password",
+    "DATABASE_URL": "@database_url",
+    "BETTER_AUTH_SECRET": "@better_auth_secret",
+    "BETTER_AUTH_URL": "@better_auth_url",
+    "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
+    "NEXT_PUBLIC_APP_URL": "@next_public_app_url"
+  }
+}

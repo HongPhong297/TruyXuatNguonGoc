@@ -2,15 +2,13 @@ import { vi } from '@/lib/i18n/vi'
 import { Truck } from 'lucide-react'
 import { getReadyToPack } from '@/app/actions/pack'
 import PackForm from '@/components/forms/pack-form'
-import { requireRole } from '@/lib/auth-helpers'
+import { requireRoleWithEntity } from '@/lib/auth-helpers'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Phân phối' }
 
-const DEMO_DISTRIBUTOR_ID = 'dist-001'
-
 export default async function DistributorPage() {
-  await requireRole('distributor')
+  const { entityId: distributorId } = await requireRoleWithEntity('distributor')
   const readyRows = await getReadyToPack()
   const availableProducts = readyRows.map(r => r.product as {
     id: string; batch_code: string; commodity_id: string; stage: string
@@ -51,7 +49,7 @@ export default async function DistributorPage() {
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h2 className="font-semibold text-gray-700 mb-4">{vi.distributor.packageRetail}</h2>
           <PackForm
-            distributorId={DEMO_DISTRIBUTOR_ID}
+            distributorId={distributorId}
             availableProducts={availableProducts}
           />
         </div>

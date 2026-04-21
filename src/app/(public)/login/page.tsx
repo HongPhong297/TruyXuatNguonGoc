@@ -3,6 +3,7 @@
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn, signUp } from '@/lib/auth-client'
+import { linkUserToEntityAction } from '@/app/actions/account'
 import { vi } from '@/lib/i18n/vi'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
@@ -42,6 +43,10 @@ function LoginForm() {
         // @ts-expect-error custom field role
         const r = await signUp.email({ email, password, name, role })
         if (r.error) throw new Error(r.error.message)
+        // Tự động tạo Neo4j entity tương ứng role (idempotent MERGE)
+        if (role === 'farmer' || role === 'facility' || role === 'distributor') {
+          await linkUserToEntityAction(role)
+        }
         router.push(ROLE_HOME[role] ?? '/farmer')
       }
       router.refresh()

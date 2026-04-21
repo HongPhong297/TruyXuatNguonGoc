@@ -39,3 +39,22 @@ export async function requireRole(role: UserRole) {
   }
   return user
 }
+
+/**
+ * Require role + đảm bảo user có entity trong Neo4j (idempotent MERGE)
+ * Trả về { user, entityId } — entityId == user.id (1-1 binding)
+ *
+ * Dùng trong Server Components của /farmer, /facility, /distributor pages
+ * để thay `DEMO_*_ID` hardcoded
+ */
+export async function requireRoleWithEntity(role: 'farmer' | 'facility' | 'distributor') {
+  const user = await requireRole(role)
+  // Lazy import để tránh circular dep (account.ts import auth.ts)
+  const { ensureEntityForCurrentUser } = await import('@/app/actions/account')
+  const entityId = await ensureEntityForCurrentUser()
+  if (!entityId) {
+    // Fallback — không nên xảy ra nếu role hợp lệ
+    redirect('/unauthorized')
+  }
+  return { user, entityId }
+}
